@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProEventos.API.Data;
 using ProEventos.API.Models;
 namespace ProEventos.API.Controllers
 {
@@ -34,23 +35,25 @@ namespace ProEventos.API.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly DataContext _context;
 
-        public EventoController(ILogger<WeatherForecastController> logger)
+        public EventoController(ILogger<WeatherForecastController> logger, DataContext context)
         {
             _logger = logger;
+            this._context = context;
         }
 
         ///Requisitar Recursos (Request Resource)
         [HttpGet]
         public IEnumerable<Evento> Get()
         {
-            return _evento;
+            return _context.Eventos;
         }
 
         [HttpGet("{id}")]
         public Evento Get(int id)
         {
-            return _evento.FirstOrDefault(f => f.EventoId == id);
+            return _context.Eventos.FirstOrDefault(f => f.EventoId == id);
         }
 
         //Criar Recurso (Create Resource)
