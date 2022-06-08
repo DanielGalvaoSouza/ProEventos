@@ -15,6 +15,35 @@ namespace ProEventos.API.Data.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.17");
 
+            modelBuilder.Entity("ProEventos.API.Models.Auditorios", b =>
+                {
+                    b.Property<int>("IdAuditorio")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Logradouro")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Telefone")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("possuiOnibusParaTransporte")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("qdtAssentos")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("IdAuditorio");
+
+                    b.ToTable("auditorios");
+                });
+
             modelBuilder.Entity("ProEventos.API.Models.Evento", b =>
                 {
                     b.Property<int>("EventoId")
@@ -41,7 +70,7 @@ namespace ProEventos.API.Data.Migrations
 
                     b.HasKey("EventoId");
 
-                    b.ToTable("Eventos");
+                    b.ToTable("eventos");
                 });
 #pragma warning restore 612, 618
         }

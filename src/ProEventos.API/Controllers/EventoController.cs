@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProEventos.API.Data;
@@ -12,48 +13,26 @@ namespace ProEventos.API.Controllers
     [Route("[controller]")]
     public class EventoController : ControllerBase
     {
-        public IEnumerable<Evento> _evento = new Evento[]
-        {
-            new Evento(){
-                EventoId = 2,
-                Local = "Contagem",
-                DataEvento = DateTime.Now.AddYears(5).ToString(),
-                Tema = "Angular 11 e .NET 5",
-                QtdPessoas = 1,
-                Lote = "2º Lote",
-                ImagemURL = "foto1.jpg"
-            },
-            new Evento(){
-                EventoId = 1,
-                Local = "Belo Horizonte",
-                DataEvento = DateTime.Now.AddYears(5).ToString(),
-                Tema = "Angular 37 e .NET 50",
-                QtdPessoas = 1,
-                Lote = "29º Lote",
-                ImagemURL = "foto.jpg"
-            }
-        };
-
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly DataContext _context;
+        private readonly IEventosDisplay _eventosDisplay;
 
-        public EventoController(ILogger<WeatherForecastController> logger, DataContext context)
+        public EventoController(ILogger<WeatherForecastController> logger, IEventosDisplay eventosDisplay)
         {
             _logger = logger;
-            this._context = context;
+            _eventosDisplay = eventosDisplay;
         }
 
         ///Requisitar Recursos (Request Resource)
         [HttpGet]
         public IEnumerable<Evento> Get()
         {
-            return _context.Eventos;
+            return _eventosDisplay.Eventos;
         }
 
         [HttpGet("{id}")]
         public Evento Get(int id)
         {
-            return _context.Eventos.FirstOrDefault(f => f.EventoId == id);
+            return _eventosDisplay.Eventos.FirstOrDefault(f => f.EventoId == id);
         }
 
         //Criar Recurso (Create Resource)
