@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ProEventos.API.Data;
-using ProEventos.API.Models;
+using ProEventos.API.Models.Contracts;
+using ProEventos.API.Models.DTO;
 
 namespace ProEventos.API
 {
@@ -38,15 +33,15 @@ namespace ProEventos.API
 
             //Explicações sobre Container de Injeção de Dependência
             //https://pt.stackoverflow.com/questions/528196/quais-s%C3%A3o-as-diferen%C3%A7as-entre-os-m%C3%A9todos-addtransient-addscoped-e-addsingleton
-            services.AddSingleton<IEventosDisplay, DataContextEvento>();
-            services.AddSingleton<IAuditoriosDisplay, DataContextAuditorio>();
-
+            services.AddScoped<IRepositoryQueryRS<DTOEvents>, EventsQueryRSContext<DTOEvents>>();
+            services.AddSingleton<IRepositoryCommandRS<DTOEvents>, EventsCommandRSContext<DTOEvents>>();
+            services.AddScoped<IRepositoryQueryRS<DTOAuditoriums>, AuditoriumsQueryRSContext<DTOAuditoriums>>();
+            services.AddSingleton<IRepositoryCommandRS<DTOAuditoriums>, AuditoriumsCommandRSContext<DTOAuditoriums>>();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
             });
-
 
         }
 
@@ -75,5 +70,17 @@ namespace ProEventos.API
                 endpoints.MapControllers();
             });
         }
+
+        public static string GetConnectionStrings()
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+            
+            return configuration.GetConnectionString("Default");
+
+        }
+
     }
 }

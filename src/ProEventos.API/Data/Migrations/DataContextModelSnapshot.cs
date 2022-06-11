@@ -15,62 +15,62 @@ namespace ProEventos.API.Data.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.17");
 
-            modelBuilder.Entity("ProEventos.API.Models.Auditorios", b =>
+            modelBuilder.Entity("ProEventos.API.Models.Auditoriums", b =>
                 {
-                    b.Property<int>("IdAuditorio")
+                    b.Property<int>("IdAuditorium")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Logradouro")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Nome")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Telefone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("possuiOnibusParaTransporte")
+                    b.Property<bool>("HasBusesToTransportVisitors")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("qdtAssentos")
+                    b.Property<string>("LocationAddress")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("IdAuditorio");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("auditorios");
+                    b.Property<int>("NumberOfSeats")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("IdAuditorium");
+
+                    b.ToTable("Auditoriums");
                 });
 
-            modelBuilder.Entity("ProEventos.API.Models.Evento", b =>
+            modelBuilder.Entity("ProEventos.API.Models.Events", b =>
                 {
-                    b.Property<int>("EventoId")
+                    b.Property<int>("IdEvent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("DataEvento")
+                    b.Property<string>("AddressCity")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImagemURL")
+                    b.Property<string>("DateOfTheEvent")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Local")
+                    b.Property<string>("FlyerPictureFile")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Lote")
+                    b.Property<string>("LotOfEvent")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("QtdPessoas")
+                    b.Property<int>("NumberOfPeople")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Tema")
+                    b.Property<string>("ThemeOfEvent")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("EventoId");
+                    b.HasKey("IdEvent");
 
-                    b.ToTable("eventos");
+                    b.ToTable("Events");
                 });
 #pragma warning restore 612, 618
         }
