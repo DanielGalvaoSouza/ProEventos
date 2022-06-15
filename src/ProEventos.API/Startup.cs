@@ -1,10 +1,13 @@
 using System.IO;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProEventos.API.Data;
 using ProEventos.API.Models.Contracts;
@@ -43,6 +46,28 @@ namespace ProEventos.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
             });
 
+
+
+            //Authentication With JWT Json Web Token
+            var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,11 +84,15 @@ namespace ProEventos.API
 
             app.UseRouting();
 
+            //Authentication With JWT Json Web Token
+            app.UseAuthentication();
+
+
             app.UseAuthorization();
 
-            app.UseCors(x => x.WithOrigins("http://localhost:4200")
-                .AllowAnyMethod()
-                .AllowAnyMethod());
+            //app.UseCors(x => x.WithOrigins("http://localhost:4200")
+            //    .AllowAnyMethod()
+            //    .AllowAnyMethod());
 
             app.UseEndpoints(endpoints =>
             {
