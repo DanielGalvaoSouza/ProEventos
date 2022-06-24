@@ -26,6 +26,6 @@ namespace ProEventos.API.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token) + " - Expires in: " + Convert.ToDateTime(tokenDescriptor.Expires).ToString();
         }
-        
+
     }
 }

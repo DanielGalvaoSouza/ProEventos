@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProEventos.API.Models.DTO;
-using ProEventos.API.Models.Contracts;
 using ProEventos.API.Models.ResponseAPI;
+using ProEventos.Persistence.Contracts;
+using ProEventos.Persistence.DTO;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ namespace ProEventos.API.Controllers
             }
 
             return Ok(responseAPI);
-            
+
         }
 
         [HttpGet("{id}")]
@@ -72,7 +72,7 @@ namespace ProEventos.API.Controllers
                 responseAPI.MessageProcess = ex.Message;
                 return StatusCode(500, responseAPI);
             }
-            
+
             return Ok(responseAPI);
 
         }

@@ -1,11 +1,11 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using ProEventos.API.Models.ResponseAPI;
+using ProEventos.Persistence.Contracts;
+using ProEventos.Persistence.DTO;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ProEventos.API.Models.Contracts;
-using ProEventos.API.Models.DTO;
-using ProEventos.API.Models.ResponseAPI;
 
 namespace ProEventos.API.Controllers
 {
@@ -34,8 +34,9 @@ namespace ProEventos.API.Controllers
             var responseAPI = new ResponseAPI<DTOEvents>();
 
             await Task.Delay(0);
-            
-            try{
+
+            try
+            {
                 responseAPI.ListEntityObject = _eventsQueryRS.ListRepositoryOfDTO;
                 responseAPI.IsProcessSucessfuly = true;
 
@@ -47,7 +48,7 @@ namespace ProEventos.API.Controllers
                 responseAPI.MessageProcess = ex.Message;
                 return StatusCode(500, responseAPI);
             }
-            
+
             return Ok(responseAPI);
 
         }
@@ -64,14 +65,14 @@ namespace ProEventos.API.Controllers
                 responseAPI.EntityObject = _eventsQueryRS.ListRepositoryOfDTO.FirstOrDefault(f => f.IdEvent == idEvent);
                 responseAPI.IsProcessSucessfuly = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 responseAPI.IsProcessSucessfuly = false;
                 responseAPI.MessageProcess = ex.Message;
                 return StatusCode(500, responseAPI);
             }
-            
+
             return Ok(responseAPI);
 
         }
@@ -81,7 +82,7 @@ namespace ProEventos.API.Controllers
         public async Task<IActionResult> Post([FromBody] DTOEvents eventEntity)
         {
             var responseAPI = new ResponseAPI<DTOEvents>();
-            
+
             try
             {
                 responseAPI.EntityObject = await _eventsCommandRS.PostRegistry(eventEntity);
@@ -170,7 +171,7 @@ namespace ProEventos.API.Controllers
             }
 
             return Ok(responseAPI);
-            
+
         }
 
     }

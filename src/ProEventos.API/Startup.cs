@@ -1,5 +1,3 @@
-using System.IO;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,9 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ProEventos.API.Data;
-using ProEventos.API.Models.Contracts;
-using ProEventos.API.Models.DTO;
+using ProEventos.Application.Extensions;
+using System.IO;
+using System.Text;
+
 
 namespace ProEventos.API
 {
@@ -36,10 +35,10 @@ namespace ProEventos.API
 
             //Explicações sobre Container de Injeção de Dependência
             //https://pt.stackoverflow.com/questions/528196/quais-s%C3%A3o-as-diferen%C3%A7as-entre-os-m%C3%A9todos-addtransient-addscoped-e-addsingleton
-            services.AddScoped<IRepositoryQueryRS<DTOEvents>, EventsQueryRSContext<DTOEvents>>();
-            services.AddSingleton<IRepositoryCommandRS<DTOEvents>, EventsCommandRSContext<DTOEvents>>();
-            services.AddScoped<IRepositoryQueryRS<DTOAuditoriums>, AuditoriumsQueryRSContext<DTOAuditoriums>>();
-            services.AddSingleton<IRepositoryCommandRS<DTOAuditoriums>, AuditoriumsCommandRSContext<DTOAuditoriums>>();
+
+            var connectionsStrings = GetConnectionStrings();
+
+            services.AddDependencyInjections(Configuration);
 
             services.AddSwaggerGen(c =>
             {
@@ -90,9 +89,9 @@ namespace ProEventos.API
 
             app.UseAuthorization();
 
-            //app.UseCors(x => x.WithOrigins("http://localhost:4200")
-            //    .AllowAnyMethod()
-            //    .AllowAnyMethod());
+            app.UseCors(x => x.WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyMethod());
 
             app.UseEndpoints(endpoints =>
             {
@@ -106,7 +105,7 @@ namespace ProEventos.API
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json")
                     .Build();
-            
+
             return configuration.GetConnectionString("Default");
 
         }
