@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ProEventos.API.Models.ResponseAPI
+namespace ProEventos.Application.ResponseAPI
 {
-    public class ResponseAPI<T>
+    public class ResponseObject<T>
     {
         public bool IsProcessSucessfuly { get; set; }
         public string MessageProcess { get; set; }
