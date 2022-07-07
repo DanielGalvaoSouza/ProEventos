@@ -22,4 +22,8 @@
     <ProjectReference Include="..\ProEventos.Domain\ProEventos.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DB\" />
+  </ItemGroup>
+
 </Project>

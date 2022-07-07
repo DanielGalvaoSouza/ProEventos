@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ProEventos.Domain
 {
@@ -26,6 +27,7 @@ namespace ProEventos.Domain
         public IEnumerable<SocialMedia> SocialMedias { get; private set; }
         public IEnumerable<SpeakerOfEvent> SpeakerOfEvents { get; private set; }
 
+        [JsonIgnore]
         public EventsAndSpeakerOfEvent[] EventsAndSpeakerOfEvent { get; private set; }
 
         public Events(int idEvent,

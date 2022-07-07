@@ -16,9 +16,11 @@ namespace ProEventos.Persistence.Contexts
         public EventsPersist(AllDataContext dataContext)
         {
             this._dataContext = dataContext;
+            //COMO ESTA CLASSE CONTÉM SOMENTE RESGATE DE INFORMAÇÃO
+            //this._dataContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        public async Task<Events> GetAllEventByIdAsync(int IdEvent, bool includeSpeakerOfEvents = false)
+        public async Task<Events> GetEventByIdAsync(int IdEvent, bool includeSpeakerOfEvents = false)
         {
             IQueryable<Events> query = _dataContext.Events
                 .Include( e => e.Lots)
@@ -30,7 +32,7 @@ namespace ProEventos.Persistence.Contexts
                     .ThenInclude(se => se.SpeakerOfEvent);
             }
 
-            return await query.OrderBy(o => o.IdEvent)
+            return await query.AsNoTracking()
                 .FirstOrDefaultAsync(f => f.IdEvent == IdEvent);
 
         }
@@ -47,7 +49,7 @@ namespace ProEventos.Persistence.Contexts
                     .ThenInclude(se => se.SpeakerOfEvent);
             }
 
-            return await query.ToArrayAsync();
+            return await query.AsNoTracking().ToArrayAsync();
 
         }
 
@@ -64,7 +66,7 @@ namespace ProEventos.Persistence.Contexts
             }
 
             query = query.OrderBy(o => o.IdEvent)
-                .Where(e => e.ThemeOfEvent.ToLower().Contains(theme.ToLower()));
+                .Where(e => e.ThemeOfEvent.ToLower().Contains(theme.ToLower())).AsNoTracking();
 
             return await query.ToArrayAsync();
         }

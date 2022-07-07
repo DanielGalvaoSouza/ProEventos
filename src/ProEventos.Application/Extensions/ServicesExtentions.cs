@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProEventos.Application.Interfaces;
 using ProEventos.Persistence;
+using ProEventos.Persistence.Contexts;
 using ProEventos.Persistence.Contracts;
 using ProEventos.Persistence.DTO;
 using System;
@@ -15,10 +18,30 @@ namespace ProEventos.Application.Extensions
     {
         public static void AddDependencyInjections(this IServiceCollection services, IConfiguration Configuration)
         {
-            services.AddScoped<IRepositoryQueryRS<DTOEvents>, EventsQueryRSContext<DTOEvents>>();
-            services.AddSingleton<IRepositoryCommandRS<DTOEvents>, EventsCommandRSContext<DTOEvents>>();
-            services.AddScoped<IRepositoryQueryRS<DTOAuditoriums>, AuditoriumsQueryRSContext<DTOAuditoriums>>();
-            services.AddSingleton<IRepositoryCommandRS<DTOAuditoriums>, AuditoriumsCommandRSContext<DTOAuditoriums>>();
+            //services.AddDbContext<AllDataContext>(
+            //    context => context.UseSqlite("Data Source=db/ProEventos.db")
+            //);
+
+            AllDataContext allDataContext = new AllDataContext(InicializeBase());
+
+            services.AddSingleton(allDataContext);
+            services.AddSingleton<IEventService, EventsService>();
+
+            services.AddSingleton<IEventsPersist, EventsPersist>();
+            services.AddSingleton<IGeneralPersist, GeneralPersist>();
+        }
+
+        public static DbContextOptions InicializeBase()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AllDataContext>();
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite("Data Source=DB/ProEventos.db");
+            }
+
+            return optionsBuilder.Options;
+
         }
     }
 }

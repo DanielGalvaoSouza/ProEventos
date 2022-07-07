@@ -24,22 +24,11 @@ namespace ProEventos.Persistence.Contexts
 {
     public class AllDataContext : DbContext
     {
-        public AllDataContext() : base(InicializeBase()) { 
+        public AllDataContext(DbContextOptions dbContextOptions) : base(dbContextOptions) {
+            
+        }
+
         
-        }
-
-        public static DbContextOptions InicializeBase()
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlite("Data Source=ProEventos.db");
-            }
-
-            return optionsBuilder.Options;
-
-        }
 
         #region "DBSet With Domain Data"
         public DbSet<Events> Events { get; set; }
@@ -54,6 +43,17 @@ namespace ProEventos.Persistence.Contexts
         {
             modelBuilder.Entity<EventsAndSpeakerOfEvent>()
                 .HasKey(ES => new { ES.EventId, ES.SpeakerOfEventId });
+
+            modelBuilder.Entity<Events>()
+                .HasMany(e => e.SocialMedias)
+                .WithOne(rs => rs.Event)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SpeakerOfEvent>()
+                .HasMany(e => e.SocialMedias)
+                .WithOne(rs => rs.SpeakerOfEvent)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
 
     }
